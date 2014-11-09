@@ -10,10 +10,11 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import javax.media.jai.PlanarImage;
-import javax.media.jai.RenderedImageAdapter;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -28,14 +29,14 @@ public class GeoTIFF {
 
     public GeoTIFF() {
         try {
-            renderedImage = javax.imageio.ImageIO.read(new File(path + "LC81770282014145LGN00.TIF"));
+            /*renderedImage = javax.imageio.ImageIO.read(new File(path + "LC81770282014145LGN00.TIF"));
             images[0] = (PlanarImage) new RenderedImageAdapter(renderedImage);
 
             renderedImage = javax.imageio.ImageIO.read(new File(path + "LC81770282014209LGN00.TIF"));
             images[1] = (PlanarImage) new RenderedImageAdapter(renderedImage);
 
             renderedImage = javax.imageio.ImageIO.read(new File(path + "LC81770282014241LGN00.TIF"));
-            images[2] = (PlanarImage) new RenderedImageAdapter(renderedImage);
+            images[2] = (PlanarImage) new RenderedImageAdapter(renderedImage);*/
 
 
         } catch (Exception e) {
@@ -103,19 +104,27 @@ public class GeoTIFF {
         encoder.encode(images[0]);
     }
 
-    /*public void merge() {
+    public double min(double a, double b, double c) {
+        return Math.min(Math.min(a, b), c);
+    }
+
+    public void merge() {
         try {
             String targetDir = path + "result2.tiff";
-            BufferedImage img2 = new BufferedImage(images[0].getWidth(), images[0].getHeight(),
-                    BufferedImage.TYPE_INT_RGB);
 
             BufferedImage image0 = ImageIO.read(new File(path + "LC81770282014145LGN00.TIF"));
             BufferedImage image1 = ImageIO.read(new File(path + "LC81770282014209LGN00.TIF"));
             BufferedImage image2 = ImageIO.read(new File(path + "LC81770282014241LGN00.TIF"));
 
-            for(int y = 0; y < images[0].getHeight(); y++) {
-                for(int x = 0; x < images[0].getWidth(); x++) {
-                    img2.setRGB(x, y, (image0.getRGB(x, y) + image1.getRGB(x, y) + image.getRGB(x, y)) / 3);
+            BufferedImage img2 = new BufferedImage(image0.getWidth(), image0.getHeight(),
+                    BufferedImage.TYPE_INT_RGB);
+
+            double minHeight = min(image0.getHeight(), image1.getHeight(), image2.getHeight());
+            double minWidth = min(image0.getWidth(), image1.getWidth(), image2.getWidth());
+
+            for(int y = 0; y < minHeight; y++) {
+                for(int x = 0; x < minWidth; x++) {
+                    img2.setRGB(x, y, image0.getRGB(x, y) + image1.getRGB(x, y) + image2.getRGB(x, y));
                 }
             }
             File outputFile = new File(targetDir);
@@ -123,11 +132,11 @@ public class GeoTIFF {
             outputFile.createNewFile();
             ImageIO.write(img2, "tiff", outputFile);
         } catch (Exception e) { e.printStackTrace(); }
-    }*/
+    }
 
     public void toPng() {
         try {
-            File file = new File(path + "result.TIF");
+            File file = new File(path + "result2.tiff");
             String targetDir = path + "result2.png";
             BufferedImage image = ImageIO.read(file);
             if(image != null) {
