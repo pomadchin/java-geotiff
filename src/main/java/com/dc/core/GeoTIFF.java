@@ -4,6 +4,9 @@ package com.dc.core;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageEncoder;
 import com.sun.media.jai.codec.TIFFEncodeParam;
+import ij.ImagePlus;
+import ij.io.*;
+import ij.plugin.RGBStackMerge;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -24,6 +27,7 @@ public class GeoTIFF {
     private String path = "/mnt/disk2/subversions/git/github/geotrellis-spray-tutorial/data/geotiff/";
     private String filepath = "";
     private PlanarImage[] images = new PlanarImage[3];
+    private ImagePlus[] imgs = new ImagePlus[3];
     private OutputStream os = null;
     private RenderedImage renderedImage;
 
@@ -108,6 +112,68 @@ public class GeoTIFF {
         return Math.min(Math.min(a, b), c);
     }
 
+    public void ijMerge() {
+        FileInfo fi1 = new FileInfo();
+        fi1.directory = path;
+        fi1.fileName = "LC81770282014145LGN00.TIF";
+        fi1.fileFormat = FileInfo.TIFF;
+        fi1.fileType = FileInfo.RGB;
+
+        FileInfo fi2 = new FileInfo();
+        fi2.directory = path;
+        fi2.fileName = "LC81770282014209LGN00.TIF";
+        fi2.fileFormat = FileInfo.TIFF;
+        fi2.fileType = FileInfo.RGB;
+
+        FileInfo fi3 = new FileInfo();
+        fi3.directory = path;
+        fi3.fileName = "LC81770282014241LGN00.TIF";
+        fi3.fileFormat = FileInfo.TIFF;
+        fi3.fileType = FileInfo.RGB;
+
+        FileOpener fo1 = new FileOpener(fi1);
+        FileOpener fo2 = new FileOpener(fi2);
+        FileOpener fo3 = new FileOpener(fi3);
+
+        imgs[0] = fo1.open(true);
+        imgs[1] = fo2.open(true);
+        imgs[2] = fo3.open(true);
+
+        ImagePlus ip = RGBStackMerge.mergeChannels(imgs, true);
+        if(ip != null) {
+            FileSaver fs = new FileSaver(ip);
+            fs.save();
+        }
+    }
+
+    public void printPixelARGB(int pixel) {
+        int alpha = (pixel >> 24) & 0xff;
+        int red = (pixel >> 16) & 0xff;
+        int green = (pixel >> 8) & 0xff;
+        int blue = (pixel) & 0xff;
+        System.out.println("argb: " + alpha + ", " + red + ", " + green + ", " + blue);
+    }
+
+    public int rgbMix(int[] images) {
+        int sumRed = 0;
+        int sumGreen = 0;
+        int sumBlue = 0;
+        int sumAlpha = 0;
+
+        for (int color : images) {
+            sumBlue += color & 0xff;
+            sumGreen += (color & 0xff00) >> 8;
+            sumRed += (color & 0xff0000) >> 16;
+            sumAlpha += (color & 0xff0000) >> 24;
+        }
+
+        return (sumAlpha << 24)
+                | (sumRed << 16)
+                | (sumGreen << 8)
+                | (sumBlue << 0);
+
+    }
+
     public void merge() {
         try {
             String targetDir = path + "result2.tiff";
@@ -115,6 +181,8 @@ public class GeoTIFF {
             BufferedImage image0 = ImageIO.read(new File(path + "LC81770282014145LGN00.TIF"));
             BufferedImage image1 = ImageIO.read(new File(path + "LC81770282014209LGN00.TIF"));
             BufferedImage image2 = ImageIO.read(new File(path + "LC81770282014241LGN00.TIF"));
+
+            //int[] rgbs = new int[3];
 
             BufferedImage img2 = new BufferedImage(image0.getWidth(), image0.getHeight(),
                     BufferedImage.TYPE_INT_RGB);
@@ -124,7 +192,18 @@ public class GeoTIFF {
 
             for(int y = 0; y < minHeight; y++) {
                 for(int x = 0; x < minWidth; x++) {
+                    /*printPixelARGB(image0.getRGB(x, y));
+                    printPixelARGB(image1.getRGB(x, y));
+                    printPixelARGB(image2.getRGB(x, y));*/
+                    /*rgbs[0] = image0.getRGB(x, y);
+                    rgbs[1] = image1.getRGB(x, y);
+                    rgbs[2] = image2.getRGB(x, y);*/
+
+                    //int rgb = image0.getRGB(x, y) | image1.getRGB(x, y) | image2.getRGB(x, y) | 255 << 24;
+
                     img2.setRGB(x, y, image0.getRGB(x, y) + image1.getRGB(x, y) + image2.getRGB(x, y));
+                    //img2.setRGB(x, y, rgb);
+                    //img2.setRGB(x, y, rgbMix(rgbs));
                 }
             }
             File outputFile = new File(targetDir);

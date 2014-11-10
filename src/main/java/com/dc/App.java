@@ -11,6 +11,7 @@ public class App  {
         //tiff.imageIO(false);
         System.out.println(new Date());
         tiff.merge();
+        //tiff.ijMerge();
         //tiff.toPng();
         System.out.println(new Date());
     }

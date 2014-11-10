@@ -101,5 +101,11 @@
             <version>3.2</version>
             <classifier>with-deps</classifier>
         </dependency>
+        <dependency>
+            <groupId>net.imagej</groupId>
+            <artifactId>ij</artifactId>
+            <version>1.49j</version>
+        </dependency>
+
     </dependencies>
 </project>
