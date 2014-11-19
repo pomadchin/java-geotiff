@@ -1,5 +1,6 @@
 package com.dc;
 
+
 import com.dc.core.GeoTIFF;
 
 import java.util.Date;
@@ -8,12 +9,16 @@ public class App  {
 
     public static void main(String[] args) {
         GeoTIFF tiff = new GeoTIFF();
-        //tiff.imageIO(false);
+        long t1 = System.currentTimeMillis();
         System.out.println(new Date());
-        tiff.merge();
-        //tiff.ijMerge();
-        //tiff.toPng();
-        System.out.println(new Date());
-    }
+        //tiff.merge();
+        //tiff.gdalInfo();
+        tiff.mixedMerge();
+        //tiff.splitMergeModified();
 
+        System.out.println(new Date());
+        long t2 = System.currentTimeMillis();
+        System.out.println("Time spend: " + (t2 - t1) + " ms");
+    }
 }
+
