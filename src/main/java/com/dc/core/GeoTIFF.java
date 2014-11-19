@@ -34,14 +34,14 @@ public class GeoTIFF {
     private ArrayList<double[]> pixelScales;
 
     public GeoTIFF() {
-        path = "/mnt/disk2/subversions/git/github/geotrellis-spray-tutorial/data/geotiff/";
+        path = "data/geotiff/";
         tiePoints = new ArrayList<double[]>();
         pixelScales = new ArrayList<double[]>();
 
         fileNames = new ArrayList<String>();
-        fileNames.add("LC81770282014145LGN00.TIF");
-        fileNames.add("LC81770282014209LGN00.TIF");
-        fileNames.add("LC81770282014241LGN00.TIF");
+        fileNames.add("file0.tiff");
+        fileNames.add("file1.tiff");
+        fileNames.add("file2.tiff");
 
         targetDir = path + "result.tiff";
 
