@@ -30,6 +30,7 @@ public class GeoTIFF {
     private String path;
     private ArrayList<String> fileNames;
     private String targetDir;
+    private String grayScalePath;
     private ArrayList<double[]> tiePoints;
     private ArrayList<double[]> pixelScales;
 
@@ -46,6 +47,10 @@ public class GeoTIFF {
         targetDir = path + "result.tiff";
 
         gdalInfo();
+    }
+
+    public GeoTIFF(String grayScalePath) {
+        this.grayScalePath = grayScalePath;
     }
 
     private void saveTiffPng() throws IOException {
@@ -560,5 +565,24 @@ public class GeoTIFF {
         resampledImage = reader.read(0, imageReaderParams);
 
         return new Pair(resampledImage, new Pair(new Integer(xstart + xoffset), finished));
+    }
+
+    public void getGrayScalePixel(int x, int y) {
+        try {
+            BufferedImage image0;
+
+            System.out.println("getPixel started...");
+
+            image0 = ImageIO.read(new File(grayScalePath));
+
+            println("GrayScalePixel (x, y): " + "(" + String.valueOf(x) + ", " + String.valueOf(y) +
+                    "): " + String.valueOf(image0.getData().getSample(x, y, 0)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void println(String string) {
+        System.out.println(string);
     }
 }
