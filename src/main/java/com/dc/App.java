@@ -9,7 +9,7 @@ public class App  {
 
     public static void main(String[] args) {
         // GeoTIFF tiff = new GeoTIFF();
-        GeoTIFF tiff = new GeoTIFF("path");
+        GeoTIFF tiff = new GeoTIFF("10-692-323-test.tiff");
         long t1 = System.currentTimeMillis();
         System.out.println(new Date());
         // tiff.merge();
