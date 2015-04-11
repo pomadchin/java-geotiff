@@ -71,9 +71,9 @@ public class GeoTIFF {
     }
 
     public void gdalInfo() {
-        System.out.println("Getting geo info:");
+        println("Getting geo info:");
         for (String fileName : fileNames) {
-            System.out.println(fileName);
+            println(fileName);
             gdalInfo(fileName);
         }
     }
@@ -116,7 +116,7 @@ public class GeoTIFF {
             double[] scale1, scale2, tiePoints0, tiePoints1, tiePoints2;
             BufferedImage image0, image1, image2, image;
 
-            System.out.println("Merge started...");
+            println("Merge started...");
 
             image0 = ImageIO.read(new File(path + fileNames.get(0)));
             image1 = ImageIO.read(new File(path + fileNames.get(1)));
@@ -224,7 +224,7 @@ public class GeoTIFF {
         Pair<BufferedImage, Pair<Integer, Boolean>> pair0, pair1, pair2;
         Pair<Integer, Boolean> infoPair0, infoPair1, infoPair2;
 
-        System.out.println("Split merge started...");
+        println("Split merge started...");
 
         ImageInputStream is0 = ImageIO.createImageInputStream(new File(path + fileNames.get(0)));
         ImageInputStream is1 = ImageIO.createImageInputStream(new File(path + fileNames.get(1)));
@@ -324,13 +324,13 @@ public class GeoTIFF {
             if (loop) {
 
                 xstart0 = infoPair0.getFst();
-                System.out.println("xstart0:" + String.valueOf(xstart0));
+                println("xstart0:" + String.valueOf(xstart0));
 
                 xstart1 = infoPair1.getFst();
-                System.out.println("xstart1:" + String.valueOf(xstart1));
+                println("xstart1:" + String.valueOf(xstart1));
 
                 xstart2 = infoPair2.getFst();
-                System.out.println("xstart2:" + String.valueOf(xstart2));
+                println("xstart2:" + String.valueOf(xstart2));
 
                 xstart = min(xstart0, xstart1, xstart2) - 2 * xrollback;
 
@@ -372,7 +372,7 @@ public class GeoTIFF {
 
         try {
 
-            System.out.println("Split merge started...");
+            println("Split merge started...");
 
             ImageInputStream is0 = ImageIO.createImageInputStream(new File(path + fileNames.get(0)));
             ImageInputStream is1 = ImageIO.createImageInputStream(new File(path + fileNames.get(1)));
@@ -474,13 +474,13 @@ public class GeoTIFF {
                 if (loop) {
 
                     xstart0 = infoPair0.getFst();
-                    System.out.println("xstart0:" + String.valueOf(xstart0));
+                    println("xstart0:" + String.valueOf(xstart0));
 
                     xstart1 = infoPair1.getFst();
-                    System.out.println("xstart1:" + String.valueOf(xstart1));
+                    println("xstart1:" + String.valueOf(xstart1));
 
                     xstart2 = infoPair2.getFst();
-                    System.out.println("xstart2:" + String.valueOf(xstart2));
+                    println("xstart2:" + String.valueOf(xstart2));
 
                     xstart = min(xstart0, xstart1, xstart2) - 2 * xrollback;
 
@@ -571,11 +571,11 @@ public class GeoTIFF {
         try {
             BufferedImage image0;
 
-            System.out.println("getPixel started...");
+            println("getPixel started...");
 
             image0 = ImageIO.read(new File(grayScalePath));
 
-            println("GrayScalePixel (x, y): " + "(" + String.valueOf(x) + ", " + String.valueOf(y) +
+            println("GrayScalePixel " + "(" + String.valueOf(x) + ", " + String.valueOf(y) +
                     "): " + String.valueOf(image0.getData().getSample(x, y, 0)));
         } catch (Exception e) {
             e.printStackTrace();
